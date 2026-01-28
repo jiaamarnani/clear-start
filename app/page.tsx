@@ -1,123 +1,128 @@
-//Landing page
-
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-pink-100 relative overflow-hidden" style={{ fontFamily: 'Georgia, serif' }}>
-      {/* background blob decal */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 -translate-x-1/2 -translate-y-1/2"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 translate-x-1/3 translate-y-1/3"></div>
+    <div className="min-h-screen bg-white relative overflow-hidden" style={{ fontFamily: 'Georgia, serif' }}>
+      
+      {/* Subtle background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-pink-50/30 via-white to-white"></div>
       
       {/* Navigation Bar */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-pink-100 shadow-sm">
-        <div className="flex items-center justify-between px-4 py-4">
-          <div className="text-2xl tracking-tight" style={{ 
+      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-pink-100 shadow-sm">
+        <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
+          <div className="text-2xl font-semibold tracking-tight" style={{ 
             color: '#FC8DB2',
-            textShadow: '1px 1px 1px rgba(0, 0, 0, 0.3), 8px 8px 24px rgba(252, 141, 178, 0.2)',
-            fontFamily: 'Georgia, serif'
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
           }}>
             ClearStart
           </div>
-          <div className="flex gap-4 pr-4">
-            <button className="px-6 py-1.5 bg-gray-100 rounded-full text-gray-900 text-lg font-medium hover:bg-gray-200 transition shadow-sm">
+          <div className="flex gap-3">
+            <button className="px-6 py-2 bg-pink-50 rounded-full text-gray-900 text-base font-medium hover:bg-pink-100 transition-all">
               Home
             </button>
-            <a href="/quiz" className="px-6 py-1.5 bg-gray-100 rounded-full text-gray-900 text-lg font-medium hover:bg-gray-200 transition shadow-sm">
+            <a href="/quiz" className="px-6 py-2 rounded-full text-gray-700 text-base font-medium hover:bg-gray-50 transition-all">
               Quiz
             </a>
-            <button className="px-6 py-1.5 bg-gray-100 rounded-full text-gray-900 text-lg font-medium hover:bg-gray-200 transition shadow-sm">
+            <a href="/about" className="px-6 py-2 rounded-full text-gray-700 text-base font-medium hover:bg-gray-50 transition-all">
               About
-            </button>
+            </a>
           </div>
         </div>
       </nav>
 
-      {/* heading */}
-      <div className="relative z-10 max-w-5xl mx-auto px-8 py-8">
-        <div className="text-center mb-10">
+      {/* Hero Section */}
+      <div className="relative z-10 max-w-5xl mx-auto px-8 pt-20 pb-8">
+        <div className="text-center mb-20">
           <h1 
-            className="text-8xl font-black tracking-tight mb-3" 
+            className="text-8xl font-bold tracking-tight mb-10" 
             style={{ 
               color: '#FC8DB2',
-              textShadow: '2px 3px 5px rgba(0, 0, 0, 0.3), 8px 8px 24px rgba(252, 141, 178, 0.2)',
-              fontFamily: 'Didot, "Bodoni MT", "Noto Serif Display", serif'
+              textShadow: '2px 2px 4px rgba(252, 141, 178, 0.08)',
+              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
             }}
           >
             ClearStart
           </h1>
-          <p className="text-2xl text-gray-900">
+          <p className="text-2xl text-gray-700 leading-relaxed mb-12 max-w-2xl mx-auto" style={{ lineHeight: '1.7' }}>
             Acne is overwhelming, finding a routine doesn't have to be.
           </p>
+          <div className="flex gap-4 justify-center">
+            <a href="/quiz" className="inline-block bg-black px-10 py-4 rounded-full text-base font-medium text-white hover:bg-gray-900 transition-all" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+              Get Started
+            </a>
+            <button className="inline-block px-10 py-4 rounded-full text-base font-medium text-gray-700 hover:bg-gray-50 transition-all" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+              Learn More
+            </button>
+          </div>
         </div>
 
-       {/* Cards */}
-        <div className="grid grid-cols-3 gap-6 mb-10">
-          {/* Card 1 */}
-          <div className="h-64 perspective-1000">
-            <div className="relative w-full h-full transition-transform duration-700 transform-style-3d hover:rotate-y-180">
-              {/* Front */}
-              <div className="absolute w-full h-full bg-[#FFD8E9] rounded-3xl p-8 shadow-lg backface-hidden">
-                <div className="text-gray-600 text-lg font-medium mb-3">01</div>
-                <h3 className="text-2xl font-semibold text-black mb-16">Answer a few questions</h3>
-                <div className="absolute bottom-6 right-6 w-12 h-12 rounded-full flex items-center justify-center border-3 border-black">
-                  <span className="text-3xl font-bold text-black">+</span>
-                </div>
+        {/* Three Steps Section */}
+        <div className="mb-32">
+          <h2 className="text-sm uppercase tracking-widest text-gray-400 text-center mb-16" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>How It Works</h2>
+          
+          <div className="flex items-start justify-center gap-20 max-w-5xl mx-auto">
+            {/* Step 1 */}
+            <div className="flex-1">
+              <div className="flex items-baseline gap-4 mb-4">
+                <span className="text-base font-bold text-pink-400" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>01</span>
+                <h3 className="text-5xl font-semibold text-black">Answer</h3>
               </div>
-              {/* Back */}
-              <div className="absolute w-full h-full bg-[#FC8DB2] rounded-3xl p-8 shadow-lg backface-hidden rotate-y-180 flex items-center justify-center">
-                <p className="text-black text-center text-xl font-medium">Tell us about your skin, sensitivity and current products.</p>
-              </div>
+              <p className="text-base text-gray-600 pl-12 leading-relaxed" style={{ lineHeight: '1.7' }}>
+                Tell us about your skin, sensitivity and current products. 
+              </p>
             </div>
-          </div>
 
-          {/* Card 2 */}
-          <div className="h-64 perspective-1000">
-            <div className="relative w-full h-full transition-transform duration-700 transform-style-3d hover:rotate-y-180">
-              {/* Front */}
-              <div className="absolute w-full h-full bg-[#FFD8E9] rounded-3xl p-8 shadow-lg backface-hidden">
-                <div className="text-gray-600 text-lg font-medium mb-3">02</div>
-                <h3 className="text-2xl font-semibold text-black mb-16">Learn about your skin</h3>
-                <div className="absolute bottom-6 right-6 w-12 h-12 rounded-full flex items-center justify-center border-3 border-black">
-                  <span className="text-3xl font-bold text-black">+</span>
-                </div>
+            {/* Divider */}
+            <div className="w-px h-32 bg-gradient-to-b from-transparent via-gray-200 to-transparent"></div>
+
+            {/* Step 2 */}
+            <div className="flex-1">
+              <div className="flex items-baseline gap-4 mb-4">
+                <span className="text-base font-bold text-pink-400" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>02</span>
+                <h3 className="text-5xl font-semibold text-black">Learn</h3>
               </div>
-              {/* Back */}
-              <div className="absolute w-full h-full bg-[#FC8DB2] rounded-3xl p-8 shadow-lg backface-hidden rotate-y-180 flex items-center justify-center">
-                <p className="text-black text-center text-xl font-medium">Understand your acne, simply.</p>
-              </div>
+              <p className="text-base text-gray-600 pl-12 leading-relaxed" style={{ lineHeight: '1.7' }}>
+                Understand your acne, simply.
+              </p>
             </div>
-          </div>
 
-          {/* Card 3 */}
-          <div className="h-64 perspective-1000">
-            <div className="relative w-full h-full transition-transform duration-700 transform-style-3d hover:rotate-y-180">
-              {/* Front */}
-              <div className="absolute w-full h-full bg-[#FFD8E9] rounded-3xl p-8 shadow-lg backface-hidden">
-                <div className="text-gray-600 text-lg font-medium mb-3">03</div>
-                <h3 className="text-2xl font-semibold text-black mb-16">Get your routine</h3>
-                <div className="absolute bottom-6 right-6 w-12 h-12 rounded-full flex items-center justify-center border-3 border-black">
-                  <span className="text-3xl font-bold text-black">+</span>
-                </div>
+            {/* Divider */}
+            <div className="w-px h-32 bg-gradient-to-b from-transparent via-gray-200 to-transparent"></div>
+
+            {/* Step 3 */}
+            <div className="flex-1">
+              <div className="flex items-baseline gap-4 mb-4">
+                <span className="text-base font-bold text-pink-400" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>03</span>
+                <h3 className="text-5xl font-semibold text-black">Glow</h3>
               </div>
-              {/* Back */}
-              <div className="absolute w-full h-full bg-[#FC8DB2] rounded-3xl p-8 shadow-lg backface-hidden rotate-y-180 flex items-center justify-center">
-                <p className="text-black text-center text-xl font-medium">Get a custom AM/PM routine that's simple, safe and realistic.</p>
-              </div>
+              <p className="text-base text-gray-600 pl-12 leading-relaxed" style={{ lineHeight: '1.7' }}>
+                Get a custom AM/PM routine that's simple, safe and realistic.
+              </p>
             </div>
           </div>
         </div>
 
-        {/* take quiz button */}
-        <div className="text-center">
-          <a href="/quiz" className="inline-block bg-white px-16 py-6 rounded-2xl text-3xl font-bold tracking-wider shadow-xl hover:shadow-2xl transition border-2 border-black hover:scale-105 text-black">     
-            TAKE QUIZ
-          </a>
+        {/* CTA Section */}
+        <div className="text-center mb-20">
+          <div className="inline-block">
+            <p className="text-sm text-gray-500 mb-6 tracking-wide" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>READY TO START?</p>
+            <a 
+              href="/quiz" 
+              className="inline-block bg-black px-20 py-5 rounded-full text-xl font-medium text-white hover:bg-gray-900 hover:scale-[1.02] transition-all shadow-lg hover:shadow-xl"
+              style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
+            >
+              Take Quiz
+            </a>
+            <p className="text-xs text-gray-400 mt-6" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>Takes 3 minutes • No signup required</p>
+          </div>
         </div>
       </div>
 
-      {/* disclaimer */}
-      <div className="relative z-10 text-center pb-8">
-        <p className="text-sm text-gray-600">Purely Educational - Not Medical Advice</p>
-      </div>
+  {/* Footer */}
+      <footer className="relative z-10 border-t border-gray-100">
+        <div className="max-w-5xl mx-auto px-8 py-12 text-center">
+          <p className="text-sm text-gray-500 mb-2" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>Purely Educational - Not Medical Advice</p>
+          <p className="text-xs text-gray-400" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>© 2026 ClearStart</p>
+        </div>
+      </footer>
     </div>
   );
 }
