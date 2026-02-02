@@ -2,15 +2,16 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white relative overflow-hidden" style={{ fontFamily: 'Georgia, serif' }}>
       
-      {/* Subtle background gradient */}
+      {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-pink-50/30 via-white to-white"></div>
       
       {/* Navigation Bar */}
       <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-pink-100 shadow-sm">
         <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
-          <div className="text-2xl font-semibold tracking-tight" style={{ 
+          <div className="text-2xl tracking-tight" style={{ 
             color: '#FC8DB2',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+            fontWeight: 550,
+            //fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
           }}>
             ClearStart
           </div>
@@ -32,23 +33,29 @@ export default function Home() {
       <div className="relative z-10 max-w-5xl mx-auto px-8 pt-20 pb-8">
         <div className="text-center mb-20">
           <h1 
-            className="text-8xl font-bold tracking-tight mb-10" 
+            className="text-8xl tracking-tight mb-5" 
             style={{ 
               color: '#FC8DB2',
               textShadow: '2px 2px 4px rgba(252, 141, 178, 0.08)',
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+              fontWeight: 550
+              //fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
             }}
           >
             ClearStart
           </h1>
-          <p className="text-2xl text-gray-700 leading-relaxed mb-12 max-w-2xl mx-auto" style={{ lineHeight: '1.7' }}>
+          <p className="text-2xl text-gray-700 leading-relaxed mb-10 max-w-2xl mx-auto"
+           style={{ 
+            lineHeight: '1.7',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+            animation: 'slideInFromLeft 0.9s ease-out 0.3s forwards'
+            }}>
             Acne is overwhelming, finding a routine doesn't have to be.
           </p>
           <div className="flex gap-4 justify-center">
-            <a href="/quiz" className="inline-block bg-black px-10 py-4 rounded-full text-base font-medium text-white hover:bg-gray-900 transition-all" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+            <a href="/quiz" className="inline-block bg-black px-10 py-4 rounded-full text-base font-medium text-white hover:bg-gray-900 hover:bg-gray-900 hover:scale-105 transition-all" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
               Get Started
             </a>
-            <button className="inline-block px-10 py-4 rounded-full text-base font-medium text-gray-700 hover:bg-gray-50 transition-all" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+            <button className="inline-block px-10 py-4 rounded-full text-base font-medium text-gray-700 hover:bg-gray-50 hover:bg-gray-100 hover:scale-105 transition-all" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
               Learn More
             </button>
           </div>
@@ -62,7 +69,7 @@ export default function Home() {
             {/* Step 1 */}
             <div className="flex-1">
               <div className="flex items-baseline gap-4 mb-4">
-                <span className="text-base font-bold text-pink-400" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>01</span>
+                <span className="text-base font-bold " style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', color: '#FC8DB2'}}>01</span>
                 <h3 className="text-5xl font-semibold text-black">Answer</h3>
               </div>
               <p className="text-base text-gray-600 pl-12 leading-relaxed" style={{ lineHeight: '1.7' }}>
@@ -76,7 +83,7 @@ export default function Home() {
             {/* Step 2 */}
             <div className="flex-1">
               <div className="flex items-baseline gap-4 mb-4">
-                <span className="text-base font-bold text-pink-400" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>02</span>
+                <span className="text-base font-bold" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', color: '#FC8DB2' }}>02</span>
                 <h3 className="text-5xl font-semibold text-black">Learn</h3>
               </div>
               <p className="text-base text-gray-600 pl-12 leading-relaxed" style={{ lineHeight: '1.7' }}>
@@ -90,7 +97,7 @@ export default function Home() {
             {/* Step 3 */}
             <div className="flex-1">
               <div className="flex items-baseline gap-4 mb-4">
-                <span className="text-base font-bold text-pink-400" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>03</span>
+                <span className="text-base font-bold" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', color: '#FC8DB2' }}>03</span>
                 <h3 className="text-5xl font-semibold text-black">Glow</h3>
               </div>
               <p className="text-base text-gray-600 pl-12 leading-relaxed" style={{ lineHeight: '1.7' }}>

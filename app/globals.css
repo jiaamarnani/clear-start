@@ -44,3 +44,14 @@ body {
 .hover\:rotate-y-180:hover {
   transform: rotateY(180deg);
 }
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0.5;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

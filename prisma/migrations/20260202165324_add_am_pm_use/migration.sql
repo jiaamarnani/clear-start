@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Product" ADD COLUMN     "amUse" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "pmUse" BOOLEAN NOT NULL DEFAULT false;
