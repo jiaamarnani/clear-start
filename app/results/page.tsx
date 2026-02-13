@@ -15,6 +15,13 @@ export default function Results() {
   const [answers, setAnswers] = useState<QuizAnswers | null>(null);
   const [routine, setRoutine] = useState<any>(null);
 
+  const theme = {
+    primary: '#8B2635',
+    light: '#A63446',
+    lighter: '#FFF5F7',
+    accent: '#B85C69'
+  };
+
   useEffect(() => {
     const savedAnswers = localStorage.getItem('quizAnswers');
     if (savedAnswers) {
@@ -137,141 +144,185 @@ export default function Results() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-pink-400 mx-auto mb-4"></div>
-          <p className="text-gray-600" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>Generating your routine...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 mx-auto mb-4" style={{ borderColor: theme.primary }}></div>
+          <p className="text-gray-600" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>Generating your routine...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden" style={{ fontFamily: 'Georgia, serif' }}>
+    <div className="min-h-screen bg-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
       
-      {/* Subtle background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-pink-50/30 via-white to-white"></div>
-
-      {/* Navigation Bar */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-pink-100 shadow-sm">
-        <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
-          <div className="text-2xl font-semibold tracking-tight" style={{ 
-            color: '#FC8DB2',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-          }}>
+      {/* Minimalist Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-8 py-6 flex items-center justify-between">
+          <div className="text-xl tracking-tight font-medium" style={{ color: theme.primary }}>
             ClearStart
           </div>
-          <div className="flex gap-3">
-            <a href="/" className="px-6 py-2 rounded-full text-gray-700 text-base font-medium hover:bg-gray-50 transition-all">
-              Home
-            </a>
-            <a href="/quiz" className="px-6 py-2 rounded-full text-gray-700 text-base font-medium hover:bg-gray-50 transition-all">
-              Retake Quiz
-            </a>
+          <div className="flex gap-8 text-sm items-center">
+            <a href="/" className="text-gray-600 hover:text-gray-900 transition-colors">Home</a>
+            <a href="/quiz" className="text-gray-600 hover:text-gray-900 transition-colors">Retake Quiz</a>
           </div>
         </div>
       </nav>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 py-16">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold mb-6" style={{
-            color: '#FC8DB2',
-            textShadow: '2px 2px 4px rgba(252, 141, 178, 0.08)',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-          }}>
-            Your Personalized Routine
-          </h1>
-          <p className="text-xl text-gray-600">
-            Based on your <span className="font-semibold text-gray-900">{routine.skinType}</span> skin
-            {routine.sensitivity && routine.sensitivity !== 'Never' && ` with ${routine.sensitivity.toLowerCase()} sensitivity`}
-          </p>
-        </div>
+      <div className="pt-32 pb-24 px-8">
+        <div className="max-w-4xl mx-auto">
+          
+          {/* Header */}
+          <div className="mb-20">
+            <div className="text-sm text-gray-400 mb-4 uppercase tracking-widest">Your Results</div>
+            <h1 className="text-6xl font-light mb-6 leading-tight" style={{ 
+              color: theme.primary,
+              fontFamily: 'Georgia, serif'
+            }}>
+              Your personalized routine
+            </h1>
+            <p className="text-xl text-gray-600 leading-relaxed">
+              Based on your <strong className="text-gray-900">{routine.skinType}</strong> skin
+              {routine.sensitivity && routine.sensitivity !== 'Never' && ` with ${routine.sensitivity.toLowerCase()} sensitivity`}
+            </p>
+          </div>
 
-        {/* Warnings */}
-        {routine.warnings.length > 0 && (
-          <div className="bg-amber-50/50 backdrop-blur-sm border-2 border-amber-200 rounded-2xl p-8 mb-12">
-            <h3 className="font-semibold text-lg mb-4 text-gray-900" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-              Important Notes
-            </h3>
-            <ul className="space-y-2">
-              {routine.warnings.map((warning: string, idx: number) => (
-                <li key={idx} className="text-gray-700 leading-relaxed">• {warning}</li>
+          {/* Warnings */}
+          {routine.warnings.length > 0 && (
+            <div className="mb-16 p-8 rounded-lg border-l-4" style={{ 
+              backgroundColor: '#FFF9E6',
+              borderColor: '#F59E0B'
+            }}>
+              <h3 className="font-medium text-lg mb-4 text-gray-900">
+                Important Notes
+              </h3>
+              <ul className="space-y-2 text-gray-700">
+                {routine.warnings.map((warning: string, idx: number) => (
+                  <li key={idx} className="leading-relaxed">• {warning}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Morning Routine */}
+          <div className="mb-16">
+            <div className="mb-8 pb-4 border-b border-gray-200">
+              <h2 className="text-4xl font-light" style={{ 
+                color: theme.primary,
+                fontFamily: 'Georgia, serif'
+              }}>
+                Morning Routine
+              </h2>
+            </div>
+            
+            <div className="space-y-10">
+              {routine.am.map((item: any) => (
+                <div key={item.step} className="group">
+                  <div className="flex items-baseline gap-4 mb-3">
+                    <span className="text-sm font-light text-gray-400 min-w-[32px]">
+                      {String(item.step).padStart(2, '0')}
+                    </span>
+                    <h3 className="text-2xl font-light text-gray-900" style={{ fontFamily: 'Georgia, serif' }}>
+                      {item.name}
+                    </h3>
+                  </div>
+                  <div className="ml-12">
+                    <p className="text-base text-gray-900 mb-2 font-medium">{item.product}</p>
+                    <p className="text-sm text-gray-600 leading-relaxed">{item.why}</p>
+                  </div>
+                </div>
               ))}
+            </div>
+          </div>
+
+          {/* Evening Routine */}
+          <div className="mb-16" style={{ backgroundColor: theme.lighter }}>
+            <div className="p-12 rounded-lg">
+              <div className="mb-8 pb-4 border-b" style={{ borderColor: theme.accent + '30' }}>
+                <h2 className="text-4xl font-light" style={{ 
+                  color: theme.primary,
+                  fontFamily: 'Georgia, serif'
+                }}>
+                  Evening Routine
+                </h2>
+              </div>
+              
+              <div className="space-y-10">
+                {routine.pm.map((item: any) => (
+                  <div key={item.step} className="group">
+                    <div className="flex items-baseline gap-4 mb-3">
+                      <span className="text-sm font-light text-gray-400 min-w-[32px]">
+                        {String(item.step).padStart(2, '0')}
+                      </span>
+                      <h3 className="text-2xl font-light text-gray-900" style={{ fontFamily: 'Georgia, serif' }}>
+                        {item.name}
+                      </h3>
+                    </div>
+                    <div className="ml-12">
+                      <p className="text-base text-gray-900 mb-2 font-medium">{item.product}</p>
+                      <p className="text-sm text-gray-600 leading-relaxed">{item.why}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Tips */}
+          <div className="mb-16">
+            <div className="mb-8 pb-4 border-b border-gray-200">
+              <h3 className="text-3xl font-light" style={{ 
+                color: theme.primary,
+                fontFamily: 'Georgia, serif'
+              }}>
+                Quick Tips
+              </h3>
+            </div>
+            <ul className="space-y-4 text-gray-700 leading-relaxed">
+              <li className="flex items-start gap-3">
+                <span style={{ color: theme.primary }}>•</span>
+                <span>Give new products 6-8 weeks to see results</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span style={{ color: theme.primary }}>•</span>
+                <span>Always patch test new actives before full application</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span style={{ color: theme.primary }}>•</span>
+                <span>Consistency is more important than perfection</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span style={{ color: theme.primary }}>•</span>
+                <span>If irritation occurs, scale back to basics and rebuild slowly</span>
+              </li>
             </ul>
           </div>
-        )}
 
-        {/* Morning Routine */}
-        <div className="bg-white/60 backdrop-blur-sm rounded-2xl border border-pink-100 p-10 mb-8">
-          <h2 className="text-3xl font-semibold mb-8 text-gray-900" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-            Morning Routine
-          </h2>
-          <div className="space-y-8">
-            {routine.am.map((item: any) => (
-              <div key={item.step} className="border-l-2 border-pink-300 pl-6">
-                <div className="flex items-baseline gap-3 mb-2">
-                  <span className="text-lg font-bold text-pink-400" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-                    {String(item.step).padStart(2, '0')}
-                  </span>
-                  <h3 className="text-xl font-semibold text-gray-900" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-                    {item.name}
-                  </h3>
-                </div>
-                <p className="text-base text-gray-900 mb-1 leading-relaxed">{item.product}</p>
-                <p className="text-sm text-gray-600 leading-relaxed">{item.why}</p>
-              </div>
-            ))}
+          {/* CTA */}
+          <div className="text-center pt-12 border-t border-gray-200">
+            <a 
+              href="/quiz" 
+              className="inline-block px-12 py-4 rounded-full text-white font-medium transition-all hover:opacity-90 hover:scale-105"
+              style={{ backgroundColor: theme.primary }}
+            >
+              Retake Quiz
+            </a>
+            <p className="text-sm text-gray-500 mt-6">
+              Questions? <a href="/" className="underline hover:text-gray-900">Visit our homepage</a>
+            </p>
           </div>
-        </div>
 
-        {/* Evening Routine */}
-        <div className="bg-white/60 backdrop-blur-sm rounded-2xl border border-pink-100 p-10 mb-12">
-          <h2 className="text-3xl font-semibold mb-8 text-gray-900" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-            Evening Routine
-          </h2>
-          <div className="space-y-8">
-            {routine.pm.map((item: any) => (
-              <div key={item.step} className="border-l-2 border-pink-300 pl-6">
-                <div className="flex items-baseline gap-3 mb-2">
-                  <span className="text-lg font-bold text-pink-400" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-                    {String(item.step).padStart(2, '0')}
-                  </span>
-                  <h3 className="text-xl font-semibold text-gray-900" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-                    {item.name}
-                  </h3>
-                </div>
-                <p className="text-base text-gray-900 mb-1 leading-relaxed">{item.product}</p>
-                <p className="text-sm text-gray-600 leading-relaxed">{item.why}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Tips */}
-        <div className="bg-pink-50/50 backdrop-blur-sm rounded-2xl border border-pink-100 p-8 mb-12">
-          <h3 className="text-2xl font-semibold mb-6 text-gray-900" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-            Quick Tips
-          </h3>
-          <ul className="space-y-3 text-gray-700 leading-relaxed">
-            <li>• Give new products 6-8 weeks to see results</li>
-            <li>• Always patch test new actives before full application</li>
-            <li>• Consistency is more important than perfection</li>
-            <li>• If irritation occurs, scale back to basics and rebuild slowly</li>
-          </ul>
-        </div>
-
-        {/* Retake Button */}
-        <div className="text-center">
-          <a href="/quiz" className="inline-block bg-black px-16 py-4 rounded-full text-lg font-medium text-white hover:bg-gray-900 transition-all shadow-lg hover:shadow-xl" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
-            Retake Quiz
-          </a>
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-gray-100">
-        <div className="max-w-5xl mx-auto px-8 py-12 text-center">
-          <p className="text-sm text-gray-500 mb-2" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>Purely Educational - Not Medical Advice</p>
-          <p className="text-xs text-gray-400" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>© 2026 ClearStart</p>
+      <footer className="border-t border-gray-100 bg-white">
+        <div className="max-w-6xl mx-auto px-8 py-12">
+          <div className="text-center">
+            <p className="text-xs text-gray-400 mb-2">
+              <strong>Important:</strong> This is educational content, not medical advice. 
+              Always consult a dermatologist for medical concerns or persistent skin issues.
+            </p>
+            <p className="text-xs text-gray-400">© 2026 ClearStart • Made with love</p>
+          </div>
         </div>
       </footer>
     </div>
