@@ -1,414 +1,417 @@
-'use client'
+'use client';
 
+import { useEffect, useState } from 'react';
 
-import React, { useState, useEffect, useRef } from 'react';
+const theme = {
+  primary: '#6A89A7',
+  light: '#88BDF2',
+  lighter: '#BDDDFC',
+  accent: '#647b92ff',
+  muted: '#7d96aeff',
+};
 
-export default function ClearStartRedesign() {
+export default function Home() {
   const [scrolled, setScrolled] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [showTikTokBadge, setShowTikTokBadge] = useState(false);
-  const [visibleSections, setVisibleSections] = useState(new Set());
-  
-  // Toggle between color themes - change this to switch themes!
-  const [theme] = useState<'red' | 'blue'>('red'); // Options: 'red' or 'blue'
-  
-  const colors:  Record<'red' | 'blue', { primary: string; light: string; lighter: string; accent: string }> = {
-    red: {
-      primary: '#8B2635',
-      light: '#A63446',
-      lighter: '#FFF5F7',
-      accent: '#B85C69'
-    },
-    blue: {
-      primary: '#1E3A5F',
-      light: '#2C5282',
-      lighter: '#F0F4F8',
-      accent: '#4A6FA5'
-    }
-  };
-  
-  const currentTheme = colors[theme];
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-      
-      // Show TikTok badge after scrolling past hero
-      setShowTikTokBadge(window.scrollY > window.innerHeight * 0.5);
-      
-      // Calculate scroll progress
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = (window.scrollY / totalHeight) * 100;
-      setScrollProgress(progress);
-      
-      // Intersection observer for fade-in animations
-      const sections = document.querySelectorAll<HTMLElement>('.fade-in-section');
-      sections.forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight * 0.8;
-        if (isVisible && section.dataset.id) {
-          setVisibleSections(prev => new Set([...prev, section.dataset.id]));
-        }
-      });
-    };
-
-    handleScroll(); // Initial check
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    setVisible(true);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
-      
-      {/* Scroll Progress Indicator */}
-      <div 
-        className="fixed top-0 left-0 h-1 z-50 transition-all duration-300"
-        style={{ 
-          width: `${scrollProgress}%`,
-          backgroundColor: currentTheme.primary
-        }}
-      />
-      
-      {/* Floating TikTok Badge */}
-      <div 
-        className={`fixed bottom-8 right-8 z-40 transition-all duration-500 ${
-          showTikTokBadge ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
-        }`}
-      >
-        <a 
-          href="https://tiktok.com/@yourusername" 
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 px-6 py-4 rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-105"
-          style={{ backgroundColor: currentTheme.primary }}
-        >
-          <div className="text-white">
-            <div className="text-2xl font-light">60k+</div>
-            <div className="text-xs opacity-90">on TikTok</div>
-          </div>
-          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-            <span className="text-lg">→</span>
-          </div>
-        </a>
-      </div>
+    <div className="min-h-screen" style={{ backgroundColor: '#FAFAF8', fontFamily: '"DM Sans", system-ui, sans-serif' }}>
 
-      {/* Minimalist Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
-        <div className="max-w-7xl mx-auto px-8 py-6 flex items-center justify-between">
-          <div className="text-xl tracking-tight font-medium" style={{ color: currentTheme.primary }}>
-            ClearStart
-          </div>
-          <div className="flex gap-8 text-sm items-center">
-            <a href="#story" className="text-gray-600 hover:text-gray-900 transition-colors">My Story</a>
-            <a href="/quiz" className="px-6 py-2 rounded-full text-white font-medium transition-all hover:opacity-90 hover:scale-105" style={{ backgroundColor: currentTheme.primary }}>
-              Take Quiz
-            </a>
-          </div>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap');
+
+        .fade-up {
+          opacity: 0;
+          transform: translateY(18px);
+          transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .fade-up.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.25s; }
+        .delay-3 { transition-delay: 0.4s; }
+        .delay-4 { transition-delay: 0.55s; }
+
+        .step-col {
+          transition: opacity 0.2s ease;
+        }
+        .step-col:hover { opacity: 0.85; }
+
+        .btn-primary {
+          transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-primary:hover {
+          background: #4e6e8a !important;
+          transform: translateY(-1px);
+          box-shadow: 0 6px 20px rgba(106, 137, 167, 0.25);
+        }
+
+        .btn-outline {
+          transition: background 0.2s ease, color 0.2s ease;
+        }
+        .btn-outline:hover {
+          background: rgba(106, 137, 167, 0.06) !important;
+        }
+
+        .nav-link {
+          transition: color 0.2s ease;
+        }
+        .nav-link:hover { color: #1a1a1a; }
+
+        /* subtle decorative line accent */
+        .section-rule {
+          width: 36px;
+          height: 2px;
+          background: ${theme.primary};
+          margin-bottom: 20px;
+          border-radius: 2px;
+        }
+
+        .ticker-wrap {
+          overflow: hidden;
+          border-top: 1px solid rgba(106,137,167,0.12);
+          border-bottom: 1px solid rgba(106,137,167,0.12);
+          padding: 11px 0;
+        }
+        .ticker-track {
+          display: inline-flex;
+          gap: 0;
+          animation: ticker 28s linear infinite;
+          white-space: nowrap;
+        }
+        .ticker-item {
+          font-size: 11px;
+          font-weight: 500;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: ${theme.muted};
+          padding: 0 32px;
+        }
+        .ticker-sep {
+          color: rgba(106,137,167,0.25);
+          font-size: 10px;
+          align-self: center;
+        }
+        @keyframes ticker {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+
+        @media (max-width: 768px) {
+          .hero-grid { grid-template-columns: 1fr !important; }
+          .steps-grid { grid-template-columns: 1fr !important; }
+          nav { padding: 18px 24px !important; }
+        }
+      `}</style>
+
+      {/* ── NAV ── */}
+      <nav
+        style={{
+          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+          padding: '22px 48px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          backgroundColor: scrolled ? 'rgba(250,250,248,0.94)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(12px)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(0,0,0,0.06)' : '1px solid transparent',
+          transition: 'all 0.35s ease',
+        }}
+      >
+        <div style={{ fontFamily: '"DM Sans", system-ui, sans-serif', fontSize: 22, fontWeight: 400, color: theme.primary, letterSpacing: '0.5px' }}>
+          ClearStart
+        </div>
+        <div style={{ display: 'flex', gap: 32, alignItems: 'center' }}>
+          <a href="#how-it-works" className="nav-link" style={{ fontSize: 13, color: '#666', textDecoration: 'none' }}>How It Works</a>
+          <a href="#about" className="nav-link" style={{ fontSize: 13, color: '#666', textDecoration: 'none' }}>About</a>
+          <a href="/mystory" className="nav-link" style={{ fontSize: 13, color: '#666', textDecoration: 'none' }}>My Story</a>
+          <a
+            href="/quiz"
+            className="btn-primary"
+            style={{
+              backgroundColor: theme.primary, color: 'white',
+              padding: '10px 22px', borderRadius: 6,
+              fontSize: 13, fontWeight: 500, textDecoration: 'none',
+            }}
+          >
+            Take the Quiz
+          </a>
         </div>
       </nav>
 
-      {/* Hero - Start of Story */}
-      <section className="min-h-screen flex items-center justify-center px-8 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-white to-white"></div>
-
-        <div className="relative z-10 max-w-4xl text-center">
-            <div className="text-sm tracking-widest text-gray-400 uppercase">
-              Clear Start
+      {/* ── HERO ── */}
+      <section style={{ maxWidth: 860, margin: '0 auto', padding: '160px 48px 100px', textAlign: 'center' }}>
+          {/* eyebrow */}
+          <div className={`fade-up delay-1 ${visible ? 'visible' : ''}`}>
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: 7,
+              fontSize: 11, fontWeight: 500, letterSpacing: '2.5px',
+              textTransform: 'uppercase', color: theme.primary,
+              border: `1px solid ${theme.accent}55`,
+              padding: '6px 14px', borderRadius: 100, marginBottom: 36,
+            }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: theme.primary, display: 'inline-block' }} />
+              Acne Education Platform
+            </span>
           </div>
 
-          <h1 className="text-8xl md:text-7xl mb-8 tracking-tight font-light drop-shadow-md" style={{
-            color: currentTheme.primary,
-            lineHeight: 1.1,
-            fontFamily: 'Georgia, serif'
-          }}>
-            Acne is confusing, <br />
-            Your routine shouldn't be.
+          <h1
+            className={`fade-up delay-2 ${visible ? 'visible' : ''}`}
+            style={{
+              fontFamily: '"DM Sans", system-ui, sans-serif',
+              fontSize: 'clamp(46px, 5vw, 72px)',
+              fontWeight: 400, lineHeight: 1.05,
+              letterSpacing: '-0.5px', color: '#1a1a1a',
+              marginBottom: 28,
+            }}
+          >
+            Acne is confusing,<br />
+            <em style={{ fontStyle: 'italic', color: theme.primary }}>your routine</em>{' '}shouldn't be.
           </h1>
 
-          <p className="text-xl text-gray-600 leading-relaxed mb-12">
-            no more trial and error, get answers and routines that make sense.
-          </p>
-
-        </div>
-
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-gray-500 text-sm animate-bounce" style={{ animationDuration: '3s' }}>
-          Scroll to continue ↓
-        </div>
-
-
-      </section>
-    
-
-      {/* Section 1: The Struggle */}
-      <section 
-        id="story"
-        className="fade-in-section min-h-screen flex items-center px-8 py-32 transition-all duration-1000 ease-out"
-        data-id="section1"
-        style={{ 
-          backgroundColor: currentTheme.lighter,
-          opacity: visibleSections.has('section1') ? 1 : 0,
-          transform: visibleSections.has('section1') ? 'translateY(0)' : 'translateY(80px)'
-        }}
-      >
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-12 items-center">
-            <div className="md:col-span-2">
-              <div className="text-8xl font-light mb-4" style={{ color: currentTheme.light, opacity: 0.3 }}>01</div>
-            </div>
-            <div className="md:col-span-3 space-y-6">
-              <h2 className="text-5xl font-light mb-6" style={{ 
-                color: currentTheme.primary,
-                fontFamily: 'Georgia, serif'
-              }}>
-                My Struggle
-              </h2>
-              <p className="text-xl text-gray-700 leading-relaxed">
-                I went from clear skin to persistent texture and acne. 
-                Spending hours on Reddit and TikTok finding new products to try for my skin, only to be left more confused and frustrated.
-              </p>
-              <p className="text-xl text-gray-700 leading-relaxed">
-                Trying new products and routines was pointless when I didn't understand
-                 <em>why</em> or how to address MY specific acne.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 2: The Overwhelm */}
-      <section 
-        className="fade-in-section min-h-screen flex items-center px-8 py-32 bg-white transition-all duration-1000"
-        data-id="section2"
-        style={{ 
-          opacity: visibleSections.has('section2') ? 1 : 0,
-          transform: visibleSections.has('section2') ? 'translateY(0)' : 'translateY(50px)'
-        }}
-      >
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-12 items-center"> 
-            <div className="md:col-span-3 space-y-6">
-              <h2 className="text-5xl font-light mb-6" style={{ 
-                color: currentTheme.primary,
-                fontFamily: 'Georgia, serif'
-              }}>
-                The information overload
-              </h2>
-              <div className="space-y-4 text-lg text-gray-700">
-                <p>"Try retinol!" "No, try benzoyl peroxide!" "Actually, you need salicylic acid!"</p>
-                <p>"Use a 10-step routine!" "Wait, that's too many products!"</p>
-                <p>"It's your diet!" "It's your hormones!" "It's stress!"</p>
-              </div>
-              <p className="text-xl text-gray-700 leading-relaxed pt-6 border-t border-gray-200">
-                Everyone had an opinion. No one had answers that worked for <em>me</em>.
-              </p>
-              <div className="pt-6">
-                <div className="p-6 rounded-lg transition-all hover:shadow-md" style={{ backgroundColor: currentTheme.lighter }}>
-                  <p className="text-sm text-gray-600 mb-2 font-medium">THE REALITY:</p>
-                  <p className="text-gray-700">
-                    I spent <strong>$800+</strong> on products in one year. Only <strong>2</strong> actually 
-                    helped. The rest collected dust in my bathroom.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="md:col-span-2">
-              <div className="text-8xl font-light mb-4 text-right" style={{ color: currentTheme.light, opacity: 0.3 }}>02</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 3: The Turning Point */}
-      <section 
-        className="fade-in-section min-h-screen flex items-center px-8 py-32 transition-all duration-1000"
-        data-id="section3"
-        style={{ 
-          backgroundColor: currentTheme.lighter,
-          opacity: visibleSections.has('section3') ? 1 : 0,
-          transform: visibleSections.has('section3') ? 'translateY(0)' : 'translateY(50px)'
-        }}
-      >
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-12 items-center">
-            <div className="md:col-span-2">
-              <div className="text-8xl font-light mb-4" style={{ color: currentTheme.light, opacity: 0.3 }}>03</div>
-            </div>
-            <div className="md:col-span-3 space-y-6">
-              <h2 className="text-5xl font-light mb-6" style={{ 
-                color: currentTheme.primary,
-                fontFamily: 'Georgia, serif'
-              }}>
-                Here's my routine
-              </h2>
-              <p className="text-xl text-gray-700 leading-relaxed">
-                After months of trial and error, I finally found what worked. Not through 
-                expensive dermatologists or trendy TikTok hacks.
-              </p>
-              <p className="text-xl text-gray-700 leading-relaxed">
-                Through <strong>research</strong>, <strong>patience</strong>, and understanding 
-                that skincare isn't one-size-fits-all.
-              </p>
-              <div className="space-y-3 pt-6">
-                <div className="flex items-start gap-3 transition-all hover:translate-x-2">
-                  <div className="w-2 h-2 rounded-full mt-2" style={{ backgroundColor: currentTheme.primary }}></div>
-                  <p className="text-gray-700">2 Step AM routine: moisturizer, SPF</p>
-                </div>
-                <div className="flex items-start gap-3 transition-all hover:translate-x-2">
-                  <div className="w-2 h-2 rounded-full mt-2" style={{ backgroundColor: currentTheme.primary }}></div>
-                  <p className="text-gray-700">Strategic PM routine: cleanser, treatment, moisturizer</p>
-                </div>
-                <div className="flex items-start gap-3 transition-all hover:translate-x-2">
-                  <div className="w-2 h-2 rounded-full mt-2" style={{ backgroundColor: currentTheme.primary }}></div>
-                  <p className="text-gray-700">No more than 5 products total. That's it.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      {/* Section 5: The Mission */}
-      <section
-        className="fade-in-section min-h-screen flex items-center px-8 py-32 transition-all duration-1000"
-        data-id="section5"
-        style={{
-          backgroundColor: currentTheme.lighter,
-          opacity: visibleSections.has('section5') ? 1 : 0,
-          transform: visibleSections.has('section5') ? 'translateY(0)' : 'translateY(50px)'
-        }}
-      >
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-12 items-center">
-            <div className="md:col-span-3 space-y-6">
-              <h2 className="text-5xl font-light mb-6" style={{
-                color: currentTheme.primary,
-                fontFamily: 'Georgia, serif'
-              }}>
-                Let me help you
-              </h2>
-              <p className="text-xl text-gray-700 leading-relaxed">
-                I built ClearStart because I wish it existed when I was struggling.
-                Stopping you from wasting time and money, giving real answers.
-              </p>
-              <p className="text-xl text-gray-700 leading-relaxed">
-                Over the past year, I've built a community of <strong>60,000+ people on TikTok</strong> who
-                are on the same journey, normalizing acne, sharing what actually works, and building confidence
-                through honest skincare education.
-              </p>
-              <div className="pt-8 space-y-4">
-                <div className="p-6 rounded-lg border-2 transition-all hover:shadow-lg" style={{ borderColor: currentTheme.primary }}>
-                  <h3 className="font-medium mb-2" style={{ color: currentTheme.primary }}>What you'll get:</h3>
-                  <ul className="space-y-2 text-gray-700">
-                    <li>• Personalized routine based on YOUR skin type</li>
-                    <li>• Active ingredients explained in plain English</li>
-                    <li>• Realistic timelines (no false promises)</li>
-                    <li>• Budget-friendly options at every price point</li>
-                  </ul>
-                </div>
-
-                <div className="pt-4">
-                  <a
-                    href="https://tiktok.com/@jlovesskincare"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-medium hover:opacity-80 transition-all hover:translate-x-1"
-                    style={{ color: currentTheme.primary }}
-                  >
-                    <span>Follow my skincare journey on TikTok</span>
-                    <span>→</span>
-                  </a>
-                  <p className="text-xs text-gray-500 mt-1">60k+ people normalizing acne together</p>
-                </div>
-              </div>
-            </div>
-            <div className="md:col-span-2">
-              <div className="text-8xl font-light mb-4 text-right" style={{ color: currentTheme.light, opacity: 0.3 }}>04</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 5: Take the Quiz */}
-      <section className="min-h-screen flex items-center justify-center px-8 py-32 text-white" style={{ backgroundColor: currentTheme.primary }}>
-        <div className="max-w-3xl text-center">
-          <h2 className="text-6xl md:text-7xl font-light mb-8 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
-            Ready to find your routine?
-          </h2>
-          <p className="text-xl mb-12 opacity-90">
-            Take 3 minutes to answer questions about your skin. Get personalized 
-            recommendations backed by research, not marketing.
-          </p>
-          <a 
-            href="/quiz" 
-            className="inline-block bg-white px-12 py-5 rounded-full text-lg font-medium transition-all hover:scale-105 shadow-xl hover:shadow-2xl"
-            style={{ color: currentTheme.primary }}
+          <p
+            className={`fade-up delay-3 ${visible ? 'visible' : ''}`}
+            style={{ fontSize: 16, color: '#666', lineHeight: 1.75, maxWidth: 480, marginBottom: 40, margin: '0 auto 40px', fontWeight: 400 }}
           >
-            Start the Quiz
-          </a>
-          <p className="text-sm mt-8 opacity-75">No signup • No email • 100% free • Just honest advice</p>
-          
-          <div className="mt-16 pt-16 border-t border-white/20">
-            <p className="text-sm opacity-75 mb-6">Why trust this?</p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-sm">
-              <div className="transition-all hover:scale-110">
-                <div className="text-3xl font-light mb-1">60k+</div>
-                <div className="opacity-75">TikTok followers</div>
+            Take our 2-minute skin quiz. Understand your acne type, identify triggers, and get a personalized routine backed by research and real testing.
+          </p>
+
+          <div className={`fade-up delay-4 ${visible ? 'visible' : ''}`} style={{ display: 'flex', gap: 14, alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <a
+              href="/quiz"
+              className="btn-primary"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                backgroundColor: theme.primary, color: 'white',
+                padding: '14px 28px', borderRadius: 6,
+                fontSize: 14, fontWeight: 500, textDecoration: 'none',
+              }}
+            >
+              Take the Quiz
+              <span style={{ fontSize: 16, lineHeight: 1 }}>→</span>
+            </a>
+            <a
+              href="/story"
+              className="btn-outline"
+              style={{
+                display: 'inline-block',
+                color: theme.primary,
+                padding: '14px 22px', borderRadius: 6,
+                border: `1.5px solid ${theme.accent}88`,
+                fontSize: 14, fontWeight: 400, textDecoration: 'none',
+              }}
+            >
+              My Story
+            </a>
+          </div>
+
+          <div className={`fade-up delay-4 ${visible ? 'visible' : ''}`} style={{ display: 'flex', gap: 6, marginTop: 28, alignItems: 'center', justifyContent: 'center' }}>
+            {['Free', '2 min quiz', 'No signup'].map((t, i) => (
+              <span key={t} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#999' }}>
+                {i > 0 && <span style={{ color: '#ddd', marginRight: 6 }}>·</span>}
+                {t}
+              </span>
+            ))}
+          </div>
+      </section>
+
+      {/* ── TICKER ── */}
+      <div className="ticker-wrap">
+        <div className="ticker-track">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <span key={i} style={{ display: 'inline-flex', alignItems: 'center' }}>
+              <span className="ticker-item">Personalized Routines</span>
+              <span className="ticker-sep">—</span>
+              <span className="ticker-item">Acne Type Analysis</span>
+              <span className="ticker-sep">—</span>
+              <span className="ticker-item">Ingredient Education</span>
+              <span className="ticker-sep">—</span>
+              <span className="ticker-item">Trigger Identification</span>
+              <span className="ticker-sep">—</span>
+              <span className="ticker-item">Zero Conflicts of Interest</span>
+              <span className="ticker-sep">—</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ── HOW IT WORKS ── */}
+      <section id="how-it-works" style={{ maxWidth: 1160, margin: '0 auto', padding: '100px 48px' }}>
+        <div className="section-rule" />
+        <div style={{ fontSize: 11, fontWeight: 500, letterSpacing: '2.5px', textTransform: 'uppercase', color: theme.primary, marginBottom: 16 }}>
+          The Process
+        </div>
+        <h2 style={{ fontFamily: '"DM Sans", system-ui, sans-serif', fontSize: 'clamp(34px, 3.5vw, 54px)', fontWeight: 400, color: '#1a1a1a', marginBottom: 16, lineHeight: 1.1 }}>
+          Three steps to <em style={{ fontStyle: 'italic', color: theme.primary }}>clarity</em>
+        </h2>
+        <p style={{ fontSize: 15, color: '#777', lineHeight: 1.75, maxWidth: 500, marginBottom: 60, fontWeight: 400 }}>
+          No more guessing. No expensive consultations. Clear, evidence-based guidance for how your skin behaves.
+        </p>
+
+        <div className="steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0, borderTop: `1px solid rgba(0,0,0,0.07)`, marginTop: 64 }}>
+          {[
+            { n: '01', title: 'Take the Quiz',       body: 'Answer simple questions about your skin type taking just 2 minutes.' },
+            { n: '02', title: 'Get Your Analysis',   body: 'We identify likely triggers of your acne type, and recommend proven active ingredients and products for your skin.' },
+            { n: '03', title: 'Follow Your Routine', body: 'Receive a step-by-step AM/PM routine with product-type guidance, application order, and ingredient breakdowns.' },
+          ].map((s, i) => (
+            <div
+              key={s.n}
+              className="step-col"
+              style={{
+                padding: '48px 40px 48px 0',
+                borderRight: i < 2 ? `1px solid rgba(0,0,0,0.07)` : 'none',
+                paddingLeft: i > 0 ? 40 : 0,
+              }}
+            >
+              <div style={{
+                fontFamily: '"DM Sans", system-ui, sans-serif',
+                fontSize: 64, fontWeight: 400,
+                color: theme.accent, opacity: 0.35,
+                lineHeight: 1, marginBottom: 20,
+                letterSpacing: '-2px',
+              }}>
+                {s.n}
               </div>
-              <div className="transition-all hover:scale-110">
-                <div className="text-3xl font-light mb-1">6 mo</div>
-                <div className="opacity-75">of research</div>
-              </div>
-              <div className="transition-all hover:scale-110">
-                <div className="text-3xl font-light mb-1">100+</div>
-                <div className="opacity-75">studies reviewed</div>
-              </div>
-              <div className="transition-all hover:scale-110">
-                <div className="text-3xl font-light mb-1">500+</div>
-                <div className="opacity-75">people helped</div>
-              </div>
+              <div style={{ fontSize: 17, fontWeight: 500, color: '#1a1a1a', marginBottom: 12 }}>{s.title}</div>
+              <div style={{ fontSize: 14, color: '#666', lineHeight: 1.75, fontWeight: 400 }}>{s.body}</div>
             </div>
-            <div className="mt-8">
-              <a 
-                href="https://tiktok.com/@yjlovesskincare" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm opacity-90 hover:opacity-100 transition-all border-b border-white/30 pb-1 hover:border-white/60"
-              >
-                <span>Join the community on TikTok</span>
-                <span>↗</span>
-              </a>
+          ))}
+        </div>
+
+        <div style={{ marginTop: 44 }}>
+          <a
+            href="/quiz"
+            className="btn-primary"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              backgroundColor: theme.primary, color: 'white',
+              padding: '14px 28px', borderRadius: 6,
+              fontSize: 14, fontWeight: 500, textDecoration: 'none',
+            }}
+          >
+            Get My Routine →
+          </a>
+        </div>
+      </section>
+
+      {/* ── WHY CLEARSTART ── */}
+      <section id="about" style={{ background: theme.lighter, borderTop: `1px solid ${theme.accent}25`, borderBottom: `1px solid ${theme.accent}25` }}>
+        <div style={{ maxWidth: 1160, margin: '0 auto', padding: '100px 48px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
+            <div>
+              <div className="section-rule" />
+              <div style={{ fontSize: 11, fontWeight: 500, letterSpacing: '2.5px', textTransform: 'uppercase', color: theme.primary, marginBottom: 16 }}>
+                Our Philosophy
+              </div>
+              <h2 style={{ fontFamily: '"DM Sans", system-ui, sans-serif', fontSize: 'clamp(32px, 3vw, 50px)', fontWeight: 400, color: '#1a1a1a', marginBottom: 20, lineHeight: 1.15 }}>
+                Not another <em style={{ fontStyle: 'italic', color: theme.primary }}>skincare brand</em>
+              </h2>
+              <p style={{ fontSize: 15, color: '#666', lineHeight: 1.8, marginBottom: 36, fontWeight: 400 }}>
+                ClearStart is an education platform. My goal is to help you understand your acne so you can make informed decisions about your skin, for life, not because its trending.
+              </p>
+              <p style={{ fontSize: 14, color: '#777', lineHeight: 1.8, fontWeight: 400 }}>
+                Evidence-based skincare education with zero conflicts of interest.
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              {[
+                { title: 'Education First',            body: "We teach you why your skin behaves the way it does, not just what to buy." },
+                { title: 'Science-Backed',             body: 'Every recommendation references review and research. No trends, no marketing language.' },
+                { title: 'Zero Conflicts of Interest', body: "We don't sell products, have ads, or take brand partnerships. The goal is simply to help you." },
+              ].map((w, i) => (
+                <div
+                  key={w.title}
+                  style={{
+                    padding: '22px 24px',
+                    background: 'white',
+                    borderLeft: `3px solid ${theme.accent}`,
+                    borderRadius: i === 0 ? '8px 8px 0 0' : i === 2 ? '0 0 8px 8px' : 0,
+                  }}
+                >
+                  <div style={{ fontSize: 14, fontWeight: 500, color: '#1a1a1a', marginBottom: 5 }}>{w.title}</div>
+                  <div style={{ fontSize: 13, color: '#777', lineHeight: 1.65, fontWeight: 400 }}>{w.body}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-8 border-t border-gray-100 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex justify-between items-start mb-8">
-            <div>
-              <div className="text-xl font-medium mb-2" style={{ color: currentTheme.primary }}>ClearStart</div>
-              <p className="text-sm text-gray-500">Skincare made simple by [Jia Amarnani]</p>
-              <p className="text-xs text-gray-400 mt-1">Software Engineer & Skincare Enthusiast</p>
+      {/* ── COMMUNITY ── */}
+      <section style={{ maxWidth: 1160, margin: '0 auto', padding: '100px 48px' }}>
+        <div className="section-rule" />
+        <div style={{ fontSize: 11, fontWeight: 500, letterSpacing: '2.5px', textTransform: 'uppercase', color: theme.primary, marginBottom: 16 }}>
+          Community
+        </div>
+        <h2 style={{ fontFamily: '"DM Sans", system-ui, sans-serif', fontSize: 'clamp(32px, 3vw, 50px)', fontWeight: 400, color: '#1a1a1a', marginBottom: 48, lineHeight: 1.15 }}>
+          Real skin. Real people.
+        </h2>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginBottom: 48 }}>
+          {[
+            { num: '64K+',  label: 'TikTok community normalizing acne together' },
+            { num: '2 min', label: 'Simple quiz completion with no account needed' },
+            { num: '100%',  label: 'Free, always. No paywall, no catch.' },
+          ].map(s => (
+            <div key={s.num} style={{
+              padding: '32px 28px',
+              border: `1px solid ${theme.accent}35`,
+              borderRadius: 10,
+              background: 'white',
+            }}>
+              <div style={{ fontFamily: '"DM Sans", system-ui, sans-serif', fontSize: 48, fontWeight: 400, color: theme.primary, marginBottom: 8, letterSpacing: '-1px' }}>{s.num}</div>
+              <div style={{ fontSize: 14, color: '#666', lineHeight: 1.6, fontWeight: 400 }}>{s.label}</div>
             </div>
-            
-            <div className="flex gap-8 text-sm text-gray-600">
-              <a href="#story" className="hover:text-gray-900 transition-colors">My Story</a>
-              <a href="/about" className="hover:text-gray-900 transition-colors">About</a>
-              <a href="/quiz" className="hover:text-gray-900 transition-colors">Quiz</a>
-            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section style={{ background: theme.primary }}>
+        <div style={{ maxWidth: 720, margin: '0 auto', padding: '100px 48px', textAlign: 'center' }}>
+          <h2 style={{ fontFamily: '"DM Sans", system-ui, sans-serif', fontSize: 'clamp(38px, 4.5vw, 64px)', fontWeight: 400, color: 'white', lineHeight: 1.1, marginBottom: 18, letterSpacing: '-0.5px' }}>
+            Ready to understand <em style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.65)' }}>your skin?</em>
+          </h2>
+          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.7)', lineHeight: 1.75, marginBottom: 44, fontWeight: 400 }}>
+            I stopped guessing and started treating my acne with clarity and confidence. With ClearStart, you can too.
+          </p>
+          <a
+            href="/quiz"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 10,
+              background: 'white', color: theme.primary,
+              padding: '16px 36px', borderRadius: 6,
+              fontSize: 15, fontWeight: 500, textDecoration: 'none',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+          >
+            Take the Quiz, It's Free! →
+          </a>
+        </div>
+      </section>
+
+      {/* ── FOOTER ── */}
+      <footer style={{ background: '#1a1a1a', padding: '52px 48px' }}>
+        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 40, flexWrap: 'wrap' }}>
+          <div>
+            <div style={{ fontFamily: '"DM Sans", system-ui, sans-serif', fontSize: 21, fontWeight: 400, color: 'rgba(255,255,255,0.75)', marginBottom: 6, letterSpacing: '0.5px' }}>ClearStart</div>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', lineHeight: 1.6, fontWeight: 400 }}>Skincare education for real skin. No sales, no gimmicks — just science.</div>
           </div>
-          
-          <div className="pt-8 border-t border-gray-100 text-center">
-            <p className="text-xs text-gray-400 mb-2">
-              <strong>Important:</strong> This is educational content, not medical advice. 
-              Always consult a dermatologist for medical concerns or persistent skin issues.
-            </p>
-            <p className="text-xs text-gray-400">© 2026 ClearStart • Made with love</p>
+          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', maxWidth: 400, lineHeight: 1.7, textAlign: 'right', fontWeight: 400 }}>
+            Educational content only, not medical advice. Consult a dermatologist for persistent concerns.<br />
+            © 2026 ClearStart
           </div>
         </div>
       </footer>
+
     </div>
   );
 }
