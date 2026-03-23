@@ -11,6 +11,16 @@ type QuizAnswers = {
   severity: string;
 };
 
+type RecommendedProduct = {
+  id: string;
+  name: string;
+  brand: string;
+  price: string;
+  imageUrl: string;
+  url: string;
+  description: string;
+};
+
 const theme = {
   primary: '#6A89A7',
   light: '#88BDF2',
@@ -22,7 +32,9 @@ const theme = {
 export default function Results() {
   const [answers, setAnswers] = useState<QuizAnswers | null>(null);
   const [routine, setRoutine] = useState<any>(null);
+  const [products, setProducts] = useState<{ am: Record<string, RecommendedProduct | null>; pm: Record<string, RecommendedProduct | null> } | null>(null);
   const [activeTab, setActiveTab] = useState<'am' | 'pm'>('am');
+  const [loadingProducts, setLoadingProducts] = useState(false);
 
   useEffect(() => {
     const savedAnswers = localStorage.getItem('quizAnswers');
@@ -30,8 +42,28 @@ export default function Results() {
       const parsedAnswers = JSON.parse(savedAnswers);
       setAnswers(parsedAnswers);
       generateRoutine(parsedAnswers);
+      fetchProducts(parsedAnswers);
     }
   }, []);
+
+  const fetchProducts = async (answers: QuizAnswers) => {
+    setLoadingProducts(true);
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(answers),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProducts({ am: data.am, pm: data.pm });
+      }
+    } catch (err) {
+      console.error('Failed to fetch product recommendations:', err);
+    } finally {
+      setLoadingProducts(false);
+    }
+  };
 
   const generateRoutine = (answers: QuizAnswers) => {
     const isOily = answers.skinType === 'Oily';
@@ -90,6 +122,13 @@ export default function Results() {
     setRoutine({ am: amRoutine, pm: pmRoutine, warnings, skinType: answers.skinType, sensitivity: answers.sensitivity });
   };
 
+  // Helper: get the recommended product for a routine step
+  const getRecommendedProduct = (stepName: string, tab: 'am' | 'pm'): RecommendedProduct | null => {
+    if (!products) return null;
+    const productMap = tab === 'am' ? products.am : products.pm;
+    return productMap[stepName] || null;
+  };
+
   if (!answers || !routine) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FAFAF8', fontFamily: '"DM Sans", system-ui, sans-serif' }}>
@@ -136,18 +175,32 @@ export default function Results() {
 
         .product-slot {
           margin-top: 14px;
-          padding: 12px 16px;
+          padding: 14px 16px;
           background: ${theme.lighter};
           border-radius: 6px;
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          gap: 12px;
+          gap: 14px;
         }
+        .product-img {
+          width: 48px;
+          height: 48px;
+          border-radius: 6px;
+          object-fit: cover;
+          background: white;
+          border: 1px solid rgba(0,0,0,0.06);
+          flex-shrink: 0;
+        }
+        .product-info { flex: 1; min-width: 0; }
         .product-name {
           font-size: 13px;
           font-weight: 500;
           color: ${theme.primary};
+        }
+        .product-brand {
+          font-size: 11px;
+          color: ${theme.muted};
+          margin-top: 1px;
         }
         .product-meta {
           font-size: 12px;
@@ -162,6 +215,15 @@ export default function Results() {
           flex-shrink: 0;
         }
         .product-link:hover { border-color: ${theme.primary}; }
+
+        .product-loading {
+          margin-top: 14px;
+          padding: 12px 16px;
+          background: rgba(106,137,167,0.06);
+          border-radius: 6px;
+          font-size: 12px;
+          color: #bbb;
+        }
 
         .retake-btn {
           display: inline-flex; align-items: center; gap: 8px;
@@ -241,30 +303,63 @@ export default function Results() {
 
         {/* ROUTINE STEPS */}
         <div style={{ marginTop: 8 }}>
-          {(activeTab === 'am' ? routine.am : routine.pm).map((item: any) => (
-            <div className="step-item" key={item.step}>
-              <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase', color: theme.muted, marginBottom: 6 }}>
-                {item.name}
-              </div>
-              <div style={{ fontSize: 16, fontWeight: 500, color: '#1a1a1a', marginBottom: 5 }}>
-                {item.product}
-              </div>
-              <div style={{ fontSize: 13, color: '#888', lineHeight: 1.7 }}>
-                {item.why}
-              </div>
-              {item.recommendedProduct && (
-                <div className="product-slot">
-                  <div>
-                    <div className="product-name">{item.recommendedProduct.name}</div>
-                    {item.recommendedProduct.price && <div className="product-meta">{item.recommendedProduct.price}</div>}
-                  </div>
-                  {item.recommendedProduct.url && (
-                    <a href={item.recommendedProduct.url} target="_blank" rel="noopener noreferrer" className="product-link">View →</a>
-                  )}
+          {(activeTab === 'am' ? routine.am : routine.pm).map((item: any) => {
+            const rec = getRecommendedProduct(item.name, activeTab);
+            return (
+              <div className="step-item" key={item.step}>
+                <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase', color: theme.muted, marginBottom: 6 }}>
+                  {item.name}
                 </div>
-              )}
-            </div>
-          ))}
+
+                {/* Loading state */}
+                {loadingProducts && !products && (
+                  <>
+                    <div style={{ fontSize: 16, fontWeight: 500, color: '#ccc', marginBottom: 5 }}>Finding the best match...</div>
+                  </>
+                )}
+
+                {/* API product — single source of truth */}
+                {rec && (
+                  <>
+                    <div style={{ fontSize: 16, fontWeight: 500, color: '#1a1a1a', marginBottom: 5 }}>
+                      {rec.name}
+                    </div>
+                    <div style={{ fontSize: 13, color: '#888', lineHeight: 1.7, marginBottom: 2 }}>
+                      {rec.description}
+                    </div>
+                    <div className="product-slot">
+                      {rec.imageUrl && (
+                        <img
+                          src={rec.imageUrl}
+                          alt={rec.name}
+                          className="product-img"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
+                      )}
+                      <div className="product-info">
+                        <div className="product-brand">{rec.brand}{rec.price ? ` · ${rec.price}` : ''}</div>
+                      </div>
+                      {rec.url && (
+                        <a href={rec.url} target="_blank" rel="noopener noreferrer" className="product-link">View →</a>
+                      )}
+                    </div>
+                  </>
+                )}
+
+                {/* Fallback — only shows if API returned no match for this step */}
+                {!rec && !loadingProducts && (
+                  <>
+                    <div style={{ fontSize: 16, fontWeight: 500, color: '#1a1a1a', marginBottom: 5 }}>
+                      {item.product}
+                    </div>
+                    <div style={{ fontSize: 13, color: '#888', lineHeight: 1.7 }}>
+                      {item.why}
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* TIPS */}
